@@ -1,13 +1,5 @@
-//
-//  food_tracker_tutorialTests.swift
-//  food-tracker-tutorialTests
-//
-//  Created by Drahman AbdulBasir on 1/10/16.
-//  Copyright © 2016 or9. All rights reserved.
-//
-
+import UIKit
 import XCTest
-@testable import food_tracker_tutorial
 
 class food_tracker_tutorialTests: XCTestCase {
     
@@ -21,16 +13,17 @@ class food_tracker_tutorialTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
+    // MARK: FoodTrackerTests
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
+    func testMealInitilization ()
+    {
+        let potentialItem = Meal(name: "Delicious, new meal", photo: nil, rating: 5)
+        XCTAssertNotNil(potentialItem, "Should init successfully if provided a name and valid rating")
+        
+        let failNoName = Meal(name: "", photo: nil, rating: 0)
+        XCTAssertNil(failNoName, "Should require a name")
+        
+        let failRating = Meal(name: "Bad Rating", photo: nil, rating: -1)
+        XCTAssertNil(failRating, "Should not be negative")
     }
-    
 }
