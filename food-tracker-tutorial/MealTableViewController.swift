@@ -11,7 +11,15 @@ class MealTableViewController: UITableViewController {
         // Use edit button provided by table view controller
         navigationItem.leftBarButtonItem = editButtonItem()
         
-        loadSampleMeals()
+        if let savedMeals = loadMeals() {
+            
+            meals += savedMeals
+            
+        } else {
+        
+            loadSampleMeals()
+            
+        }
         
     }
     
@@ -72,12 +80,18 @@ class MealTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
+            
             // Delete the row from the data source
             meals.removeAtIndex(indexPath.row)
+            
+            saveMeals()
+            
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+            
+        }
     }
 
     /*
@@ -127,7 +141,26 @@ class MealTableViewController: UITableViewController {
                 tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
             }
             
+            saveMeals()
+            
         }
 
+    }
+    
+    // MARK: NSCoding
+    
+    func saveMeals() {
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(meals, toFile: Meal.ArchiveURL.path!)
+        
+        if !isSuccessfulSave {
+            print("save failed!")
+        }
+    }
+    
+    func loadMeals() -> [Meal]? {
+        // May return array of meals or nothing (nil)
+        // use as? so it can return nil when appropriate
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(Meal.ArchiveURL.path!) as? [Meal]
+        
     }
 }
